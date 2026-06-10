@@ -19,6 +19,7 @@ public class TileItem {
     private static final String BADGE_STYLE_UPCOMING = "UPCOMING";
     private static final String BADGE_STYLE_DEFAULT = "DEFAULT";
     private static final String BADGE_STYLE_MOVIE = "BADGE_STYLE_TYPE_YPC";
+    private static final String BADGE_STYLE_MEMBERS_ONLY = "BADGE_STYLE_TYPE_MEMBERS_ONLY";
     private static final String TILE_STYLE_SHORTS = "TILE_STYLE_YTLR_SHORTS";
 
     @JsonPath("$.style")
@@ -163,6 +164,10 @@ public class TileItem {
 
     public boolean isShorts() {
         return Helpers.equalsAny(BADGE_STYLE_SHORTS, getBadgeStyles()) || TILE_STYLE_SHORTS.equals(mStyle);
+    }
+
+    public boolean isMembersOnly() {
+        return Helpers.equalsAny(BADGE_STYLE_MEMBERS_ONLY, getBadgeStyles());
     }
 
     public String getFeedbackToken() {

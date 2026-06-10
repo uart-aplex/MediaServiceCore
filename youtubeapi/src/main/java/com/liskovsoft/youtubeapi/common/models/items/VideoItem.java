@@ -15,6 +15,7 @@ public class VideoItem {
     private static final String BADGE_STYLE_UPCOMING = "UPCOMING";
     private static final String BADGE_STYLE_DEFAULT = "DEFAULT";
     private static final String BADGE_STYLE_MOVIE = "BADGE_STYLE_TYPE_YPC";
+    private static final String BADGE_STYLE_MEMBERS_ONLY = "BADGE_STYLE_TYPE_MEMBERS_ONLY";
     @JsonPath("$.videoId")
     private String mVideoId;
     @JsonPath("$.navigationEndpoint.watchEndpoint.playlistId")
@@ -57,6 +58,8 @@ public class VideoItem {
     private TextItem mBadgeText;
     @JsonPath("$.badges[0].metadataBadgeRenderer.label")
     private String mDescBadgeText;
+    @JsonPath("$.badges[0].metadataBadgeRenderer.style")
+    private String mDescBadgeStyle;
     // Sometimes live video contains percent watched as first item
     @JsonPath({"$.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.style",
                "$.thumbnailOverlays[1].thumbnailOverlayTimeStatusRenderer.style"})
@@ -144,6 +147,10 @@ public class VideoItem {
 
     public boolean isMovie() {
         return BADGE_STYLE_MOVIE.equals(mBadgeStyle);
+    }
+
+    public boolean isMembersOnly() {
+        return BADGE_STYLE_MEMBERS_ONLY.equals(mDescBadgeStyle);
     }
 
     public int getPercentWatched() {
