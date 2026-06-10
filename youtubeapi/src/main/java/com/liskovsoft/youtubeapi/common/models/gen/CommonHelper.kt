@@ -17,6 +17,8 @@ private const val BADGE_STYLE_LIVE = "LIVE"
 private const val BADGE_STYLE_UPCOMING = "UPCOMING"
 private const val BADGE_STYLE_SHORTS = "SHORTS"
 private const val BADGE_STYLE_DEFAULT = "DEFAULT"
+// Members-only / sponsorships badge
+private const val BADGE_STYLE_MEMBERS_ONLY = "BADGE_STYLE_TYPE_MEMBERS_ONLY"
 // A badge before the subtitle
 private const val STATUS_STYLE_MOVIE = "BADGE_STYLE_TYPE_YPC" // This mark sometimes presents on regular videos (e.g. fundraiser mark)
 private const val STATUS_STYLE_QUALITY = "BADGE_STYLE_TYPE_SIMPLE"
@@ -125,6 +127,7 @@ internal fun VideoItem.isLive(): Boolean = STATUS_STYLE_LIVE == getStatusStyle()
 internal fun VideoItem.isUpcoming() = BADGE_STYLE_UPCOMING == getBadgeStyle()
 internal fun VideoItem.isShorts() = BADGE_STYLE_SHORTS == getBadgeStyle()
 internal fun VideoItem.isMovie() = STATUS_STYLE_MOVIE == getStatusStyle() && getVideoId() == null
+internal fun VideoItem.isMembersOnly() = BADGE_STYLE_MEMBERS_ONLY == getStatusStyle()
 internal fun VideoItem.getFeedbackTokens() = menu?.getFeedbackTokens()
 private fun VideoItem.getStatusStyle() = badges?.firstNotNullOfOrNull { it?.metadataBadgeRenderer?.style }
 private fun VideoItem.getBadgeStyle() = thumbnailOverlays?.firstNotNullOfOrNull { it?.thumbnailOverlayTimeStatusRenderer?.style }
@@ -215,6 +218,7 @@ internal fun TileItem.getContinuationToken() = onSelectCommand?.getContinuations
 internal fun TileItem.isUpcoming() = BADGE_STYLE_UPCOMING == getBadgeStyle()
 internal fun TileItem.isMovie() = STATUS_STYLE_MOVIE == getStatusStyle() && getVideoId() == null // a movie has browseId instead of videoId
 internal fun TileItem.isShorts() = BADGE_STYLE_SHORTS == getBadgeStyle() || TILE_STYLE_SHORTS == getTileStyle()
+internal fun TileItem.isMembersOnly() = BADGE_STYLE_MEMBERS_ONLY == getStatusStyle()
 internal fun TileItem.getQuery() = onSelectCommand?.getQuery()
 private fun TileItem.Header.getBadgeStyle() = tileHeaderRenderer?.thumbnailOverlays?.firstNotNullOfOrNull { it?.thumbnailOverlayTimeStatusRenderer?.style }
 private fun TileItem.Metadata.getStatusStyle() = tileMetadataRenderer?.lines?.firstNotNullOfOrNull { it?.lineRenderer?.items?.firstNotNullOfOrNull { it?.lineItemRenderer?.badge?.metadataBadgeRenderer?.style } }
@@ -260,6 +264,7 @@ internal fun LockupItem.getPlaylistId() = rendererContext?.getPlaylistId()
 internal fun LockupItem.getThumbnails() = getThumbnailView()?.image
 internal fun LockupItem.getBadgeText() = getBadge()?.text
 internal fun LockupItem.isLive() = Helpers.equalsAny(getBadge()?.badgeStyle, BADGE_STYLE_LIVE, LOCKUP_BADGE_STYLE_LIVE)
+internal fun LockupItem.isMembersOnly() = getBadge()?.badgeStyle?.contains("MEMBERS_ONLY") == true
 internal fun LockupItem.getPercentWatched() = getOverlays()?.firstNotNullOfOrNull {
     it?.thumbnailBottomOverlayViewModel?.progressBar?.thumbnailOverlayProgressBarViewModel?.startPercent }
 // The video without a badge, probably Watch again
@@ -336,6 +341,7 @@ internal fun ItemWrapper.isLive() = getVideoItem()?.isLive() ?: getMusicItem()?.
 internal fun ItemWrapper.isUpcoming() = getVideoItem()?.isUpcoming() ?: getMusicItem()?.isUpcoming() ?: getTileItem()?.isUpcoming() ?: false
 internal fun ItemWrapper.isMovie() = getVideoItem()?.isMovie() ?: getTileItem()?.isMovie() ?: false
 internal fun ItemWrapper.isShorts() = reelItemRenderer != null || shortsLockupViewModel != null || getVideoItem()?.isShorts() ?: getTileItem()?.isShorts() ?: false
+internal fun ItemWrapper.isMembersOnly() = getVideoItem()?.isMembersOnly() ?: getTileItem()?.isMembersOnly() ?: getLockupItem()?.isMembersOnly() ?: false
 internal fun ItemWrapper.getDescriptionText() = getTileItem()?.getRichTextTileText()
 internal fun ItemWrapper.getContinuationToken() = getTileItem()?.getContinuationToken() ?: getContinuationItem()?.getContinuationToken()
 internal fun ItemWrapper.getFeedbackToken() = getFeedbackTokens()?.getOrNull(0)
