@@ -60,12 +60,26 @@ public class PlaylistService {
     }
 
     public void removePlaylist(String playlistId) {
-        // Try to remove foreign playlist first
+        if (playlistId.length() < 5) {
+            throw new IllegalStateException("Built-in playlists cannot be removed");
+        }
+
+        try {
+            // Try to remove foreign playlist first
+            removeForeignPlaylist(playlistId);
+        } catch (IllegalStateException e) {
+            // Then, delete user playlist
+            removeUserPlaylist(playlistId);
+        }
+    }
+
+    private void removeForeignPlaylist(String playlistId) {
         Call<ActionResult> removeWrapper =
                 mPlaylistManager.removeForeignPlaylist(PlaylistApiHelper.getSaveRemoveForeignPlaylistQuery(playlistId));
         RetrofitHelper.getWithErrors(removeWrapper);
+    }
 
-        // Then, delete user playlist
+    private void removeUserPlaylist(String playlistId) {
         Call<ActionResult> deleteWrapper =
                 mPlaylistManager.removePlaylist(PlaylistApiHelper.getRemovePlaylistQuery(playlistId));
         RetrofitHelper.getWithErrors(deleteWrapper);
