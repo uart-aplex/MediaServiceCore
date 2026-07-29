@@ -79,6 +79,7 @@ public interface MediaItem {
      */
     double getRatingScore();
     boolean isMovie();
+    boolean isMembersOnly();
     boolean hasUploads();
     String getClickTrackingParams();
     String getSearchQuery();

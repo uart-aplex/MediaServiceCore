@@ -58,6 +58,7 @@ open class BaseMediaItem : MediaItem {
     protected open val isUpcomingItem: Boolean? = null
     protected open val isShortsItem: Boolean? = null
     protected open val isMovieItem: Boolean? = null
+    protected open val isMembersOnlyItem: Boolean? = null
     protected open val feedbackTokenItem: String? = null
     protected open val feedbackTokenItem2: String? = null
     protected open val percentWatchedItem: Int? = null
@@ -190,6 +191,10 @@ open class BaseMediaItem : MediaItem {
 
     override fun isMovie(): Boolean {
         return isMovieItem ?: false
+    }
+
+    override fun isMembersOnly(): Boolean {
+        return isMembersOnlyItem ?: false
     }
 
     override fun hasNewContent(): Boolean {

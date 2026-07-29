@@ -53,6 +53,7 @@ public class YouTubeMediaItem implements MediaItem {
     private String mParams;
     private String mClickTrackingParams;
     private boolean mIsMovie;
+    private boolean mIsMembersOnly;
     private long mPublishedDate;
     private long mUpdatedDate;
     private String mDescription;
@@ -133,6 +134,7 @@ public class YouTubeMediaItem implements MediaItem {
         video.mFeedbackToken = item.getFeedbackToken();
         video.mClickTrackingParams = item.getClickTrackingParams();
         video.mIsMovie = item.isMovie();
+        video.mIsMembersOnly = item.isMembersOnly();
 
         addCommonProps(video);
 
@@ -168,6 +170,7 @@ public class YouTubeMediaItem implements MediaItem {
         video.mIsUpcoming = item.isUpcoming();
         video.mFeedbackToken = item.getFeedbackToken();
         video.mClickTrackingParams = item.getClickTrackingParams();
+        video.mIsMembersOnly = item.isMembersOnly();
 
         addCommonProps(video);
 
@@ -396,6 +399,11 @@ public class YouTubeMediaItem implements MediaItem {
     @Override
     public boolean isMovie() {
         return mIsMovie;
+    }
+
+    @Override
+    public boolean isMembersOnly() {
+        return mIsMembersOnly;
     }
 
     @Override
