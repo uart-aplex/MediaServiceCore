@@ -34,7 +34,7 @@ internal fun WatchNextResult.getSuggestedSections() =
 internal fun WatchNextResult.getVideoMetadata() = getWatchNextResults()?.results?.results?.contents?.getOrNull(0)
     ?.itemSectionRenderer?.contents?.map { it?.videoMetadataRenderer ?: it?.musicWatchMetadataRenderer }?.firstOrNull()
 
-internal fun WatchNextResult.getNextVideoItem() = getAutoplaySet()?.nextVideoRenderer?.getNextVideoItem()
+internal fun WatchNextResult.getNextVideoItem() = getAutoplaySet()?.nextVideoRenderer?.getNextVideoItem(hasPlaylist = getPlaylistInfo() != null)
 internal fun WatchNextResult.getAutoplayVideoItem() = getAutoplaySet()?.autoplayVideoRenderer?.getNextVideoItem()
 internal fun WatchNextResult.getShuffleVideoItem() =
     getWatchNextResults()?.pivot?.sectionListRenderer?.contents
@@ -218,6 +218,9 @@ internal fun Factoid.getAccessibilityText(): String? = factoidRenderer?.accessib
 
 ///////
 
-internal fun NextVideoRenderer.getNextVideoItem() =
-    maybeHistoryEndpointRenderer ?: autoplayEndpointRenderer ?: autoplayVideoWrapperRenderer?.primaryEndpointRenderer?.autoplayEndpointRenderer
-
+internal fun NextVideoRenderer.getNextVideoItem(hasPlaylist: Boolean = false): NextVideoItem? =
+    if (hasPlaylist) {
+        autoplayEndpointRenderer ?: maybeHistoryEndpointRenderer ?: autoplayVideoWrapperRenderer?.primaryEndpointRenderer?.autoplayEndpointRenderer
+    } else {
+        maybeHistoryEndpointRenderer ?: autoplayEndpointRenderer ?: autoplayVideoWrapperRenderer?.primaryEndpointRenderer?.autoplayEndpointRenderer
+    }
