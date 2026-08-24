@@ -26,14 +26,16 @@ import retrofit2.Call;
 public class VideoInfoService extends VideoInfoServiceBase {
     private static final String TAG = VideoInfoService.class.getSimpleName();
     private static final AppClient IOS_CLIENT = AppClient.VISIONOS;
+    private static final AppClient TV_CLIENT = AppClient.TV_DOWNGRADED;
+    private static final AppClient WEB_CLIENT = AppClient.WEB_EMBED;
     private static VideoInfoService sInstance;
     private final VideoInfoApi mVideoInfoApi;
     private final static AppClient[] VIDEO_INFO_TYPE_LIST = {
-            AppClient.VISIONOS,
             AppClient.WEB_EMBED, // Restricted (18+) videos
-            AppClient.TV_DOWNGRADED,
+            AppClient.VISIONOS, // no url formats
+            AppClient.TV_DOWNGRADED, // probably unplayable (weird potoken format?)
             AppClient.TV, // Supports auth. Fixes "please sign in" bug! (the best for Premium users)
-            AppClient.ANDROID_REEL, // doesn't require pot and cipher
+            //AppClient.ANDROID_REEL, // doesn't require pot and cipher (hangs on all engines)
             AppClient.WEB, // Fix video clip blocked in current location
             AppClient.WEB_SAFARI,
             AppClient.IOS,
@@ -71,7 +73,7 @@ public class VideoInfoService extends VideoInfoServiceBase {
         }
 
         //initInfoTypeIfNeeded();
-        reorderTypeListIfNeeded();
+        //reorderTypeListIfNeeded();
 
         AppService.instance().resetClientPlaybackNonce(); // unique value per each video info
 
@@ -97,13 +99,15 @@ public class VideoInfoService extends VideoInfoServiceBase {
 
     private void reorderTypeListIfNeeded() {
         if (getData().isFormatEnabled(MediaServiceData.FORMATS_EXTENDED_HLS)) {
-            if (VIDEO_INFO_TYPE_LIST[0] != IOS_CLIENT) {
-                Helpers.move(VIDEO_INFO_TYPE_LIST, Arrays.asList(VIDEO_INFO_TYPE_LIST).indexOf(IOS_CLIENT), 0);
-            }
+            moveFirst(IOS_CLIENT);
         } else {
-            if (VIDEO_INFO_TYPE_LIST[0] == IOS_CLIENT) {
-                Helpers.move(VIDEO_INFO_TYPE_LIST, 0, 2);
-            }
+            moveFirst(WEB_CLIENT);
+        }
+    }
+
+    private void moveFirst(AppClient client) {
+        if (VIDEO_INFO_TYPE_LIST[0] != client) {
+            Helpers.move(VIDEO_INFO_TYPE_LIST, Arrays.asList(VIDEO_INFO_TYPE_LIST).indexOf(client), 0);
         }
     }
 
